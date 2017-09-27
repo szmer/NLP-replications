@@ -1,0 +1,41 @@
+* The paper
+Karl Moritz Hermann and Phil Blunsom 2013: The Role of Syntax in Vector Space Models of Compositional Semantics. In ACL.
+http://www.karlmoritz.com/_media/hermannblunsom_acl2013.pdf
+* Provided author implementations
+** https://github.com/karlmoritz/oxcvsm ("deprecated")
+** https://github.com/karlmoritz/bicvm
+* Models (Categorial Combinatory Autoencoders)
+** CCAE-A
+As an internal baseline we use model CCAE-
+A, which is an RAE structured along a CCG parse
+tree. CCAE-A uses a single weight matrix each for
+the encoding and reconstruction step (see Table 2.
+This model is similar to Socher et al. (2011b), ex-
+cept that we use a fixed structure in place of the
+greedy tree building approach.
+** CCAE-B: each combinatory rule has its own autoencoder
+eg.: lex, forward (>) and backward (<) activation (see chart, p. 5)
+** CCAE-C AE's are parametrized both by the rule and the CCG category of the node
+** CCAE-D as CCAE-C, but with categories of nodes being combined instead of the outcome node
+* Unsupervised part
+** minimizing essentially square difference between representation and its two components (children in the CCG tree)
+** backpropagation through structure with L-BFGS optimization
+* Supervised part
+** a binary classifier making predictions given the learned representation
+** the error consists of E_rec -- representational error and E_lbl -- labeling error, weighted by an alpha
+* Datasets and tools
+** word vectors from Turian et al. (2010): http://www.metaoptimize.com/projects/wordreprs/ [dead]
+** C&C CCG parser: https://www.cl.cam.ac.uk/~sc609/candc-1.00.html
+*** alternative: http://homepages.inf.ed.ac.uk/s1049478/easyccg.html
+** MPQA opinion corpus: http://mpqa.cs.pitt.edu/corpora/mpqa_corpus/
+** Polarity Dataset: http://www.cs.cornell.edu/people/pabo/movie-review-data/
+** British National Corpus: http://www.natcorp.ox.ac.uk/
+** compound phrase similarity dataset (from the 2010 paper): http://homepages.inf.ed.ac.uk/mlap/resources/index.html
+* Experiments
+** using premade word vectors on both sentiment datasets (MPQA too easy?)
+** sentiment with pretraining
+*** unsupervised learning of word embeddings and transformation matrices on BNP & SP
+*** supervised learning with representational and labeling error on SP
+** compound phrases similarity
+*** since structures are known, assuming fixed parse trees (see fig. 6 p. 8)
+*** Spearman’s rank correlation coefficient for comparing prediction with original similarity scores
